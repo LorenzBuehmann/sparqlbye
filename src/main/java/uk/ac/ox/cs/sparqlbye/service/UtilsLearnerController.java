@@ -37,6 +37,7 @@ abstract class UtilsLearnerController {
 			"select " + uri + " " + label + " " + type + " "
 			+ "from <http://dbpedia.org/> where { "
 			+ uri + " " + RDFS_LABEL + " " + label + " . "
+			+ "FILTER(LANGMATCHES(LANG(" + label + "), 'en'))"
 			+ label + " <bif:contains> " + "'" + keywordsString + "' . "
 			+ "{ "
 			+ "select " + uri + " " + "(MIN(STR(?auxType)) as " + type + ") "
@@ -44,6 +45,7 @@ abstract class UtilsLearnerController {
 			+ "group by " + uri + " "
 			+ "} "
 			+ "} "
+			+ "ORDER BY DESC ( <LONG::IRI_RANK> (" + uri + ") )"
 			+ "limit 10";
 	}
 

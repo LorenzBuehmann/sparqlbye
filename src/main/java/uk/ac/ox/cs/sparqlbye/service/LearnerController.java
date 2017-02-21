@@ -70,10 +70,12 @@ public class LearnerController implements Observer {
 
 	public static enum ApiErrorType { NO_SPARQL_ENDPOINT };
 
-	private static final String LOCAL_SPARQL_SERVICE_ENDPOINT = "http://localhost:8890/sparql";
+	private static final String LOCAL_SPARQL_SERVICE_ENDPOINT = "http://dbpedia.org/sparql";//http://localhost:8890/sparql";
+	private static final String LOCAL_SPARQL_SERVICE_DEFAULT_GRAPH = "http://dbpedia.org";
+
 
 	private static final Function<Query, QueryExecution> queryToQueryExecution = (query) ->
-	QueryExecutionFactory.sparqlService(LOCAL_SPARQL_SERVICE_ENDPOINT, query);
+	QueryExecutionFactory.sparqlService(LOCAL_SPARQL_SERVICE_ENDPOINT, query, LOCAL_SPARQL_SERVICE_DEFAULT_GRAPH);
 
 	private static LearnerController INSTANCE;
 
@@ -245,7 +247,7 @@ public class LearnerController implements Observer {
 				ResultSet results = qe.execSelect();
 				ResultSetFormatter.outputAsJSON(baos, results);
 			} catch(QueryExceptionHTTP e) {
-				log.warn("  Caught QueryExceptionHTTP");
+				log.warn("  Caught QueryExceptionHTTP (((" + queryString + ")))");
 				throw new ResparqlNoEndpointException(e);
 			} catch(Exception e) {
 				log.warn("  Caught unexpected exception. This will probably be fatal.");
